@@ -1,0 +1,11 @@
+pickle: Module used for serializing and deserializing Python objects. Here, it's used to load trained machine learning models saved as .sav files.
+streamlit: Streamlit library used for creating interactive web applications with Python.
+st.set_page_config: Method to set configuration options for the Streamlit app, such as title, icon, and layout.
+option_menu: A custom option menu for navigation between different sections of the application.
+st.title: Method to display titles on different sections of the web application.
+st.image: Method to display images on the web application.
+st.text_input: Method to create text input fields for users to enter data.
+st.columns: Method to divide the layout into columns to organize input fields.
+st.button: Method to create buttons that users can click to trigger actions.
+diabetes_model.predict and parkinson_model.predict: Methods to make predictions using the loaded machine learning models.
+st.success: Method to display success messages or results on the web application.

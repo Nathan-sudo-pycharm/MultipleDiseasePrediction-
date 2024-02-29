@@ -1,39 +1,32 @@
-import pickle
-import streamlit as st
-from streamlit_option_menu import option_menu
+import pickle  # Module used for serializing and deserializing Python objects
+import streamlit as st  # Streamlit library for creating interactive web applications
+from streamlit_option_menu import option_menu  # Custom option menu for navigation
 
-# Page config
+# Setting up the page configuration for the Streamlit app
 st.set_page_config(
-    page_title="Multiple Disease Prediction",
-    page_icon="🏥",
-    layout="wide"
-
+    page_title="Multiple Disease Prediction",  # Title of the web application
+    page_icon="🏥",  # Icon for the web application
+    layout="wide"  # Setting the layout of the page
 )
 
-# loading the saved models
+# Loading the saved machine learning models using pickle
+diabetes_model = pickle.load(open('models/diabetes_model.sav', 'rb'))  # Loading the diabetes prediction model
+parkinson_model = pickle.load(open('models/parkinson_model.sav', 'rb'))  # Loading the Parkinson's prediction model
 
-diabetes_model = pickle.load(open('models/diabetes_model.sav', 'rb'))
-
-heart_disease_model = pickle.load(open('models/heart_disease_model.sav', 'rb'))
-
-parkinson_model = pickle.load(open('models/parkinson_model.sav', 'rb'))
-
-
-# sidebar for navigation
+# Sidebar for navigation using a custom option menu
 selected = option_menu('Multiple Disease Prediction Dashboard',
+                       ['Home', 'Diabetes Prediction', "Parkinson's Prediction"],  # List of menu options
+                       icons=['house-fill', 'capsule-pill', 'heart-pulse-fill', 'people-fill'],  # Icons for each option
+                       menu_icon='clipboard2-pulse',  # Icon for the main menu
+                       orientation='horizontal')  # Orientation of the menu
 
-                       ['Home', 'Diabetes Prediction',
-                        'Heart Disease Prediction',
-                        "Parkinson's Prediction"],
-                       icons=['house-fill', 'capsule-pill', 'heart-pulse-fill', 'people-fill'],
-                       menu_icon='clipboard2-pulse',
-                       orientation='horizontal')
 
+# Home Page
+if selected == 'Home':
+    st.title('Multiple Disease Prediction using Machine Learning')  # Title of the Home page
+    st.image('assets/main_banner.gif')  # Displaying an image on the Home page
 
 # Diabetes Prediction Page
-if selected == 'Home':
-    st.title('Multiple Disease Prediction using Machine Learning')
-    st.image('assets/main_banner.gif')
 if selected == 'Diabetes Prediction':
 
     # page title
@@ -76,77 +69,13 @@ if selected == 'Diabetes Prediction':
         diab_prediction = diabetes_model.predict(
             [[Pregnancies, Glucose, BloodPressure, SkinThickness, Insulin, BMI, DiabetesPedigreeFunction, Age]])
 
+        # Determining the diagnosis based on the prediction result
         if diab_prediction[0] == 1:
             diab_diagnosis = 'The person is diabetic'
         else:
             diab_diagnosis = 'The person is not diabetic'
 
-    st.success(diab_diagnosis)
-
-
-# Heart Disease Prediction Page
-if selected == 'Heart Disease Prediction':
-
-    # page title
-    st.title('❤️Heart Disease Prediction using ML')
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        age = st.text_input('Age')
-
-    with col2:
-        sex = st.text_input('Sex')
-
-    with col3:
-        cp = st.text_input('Chest Pain types')
-
-    with col1:
-        trestbps = st.text_input('Resting Blood Pressure')
-
-    with col2:
-        chol = st.text_input('Serum Cholesterol in mg/dl')
-
-    with col3:
-        fbs = st.text_input('Fasting Blood Sugar > 120 mg/dl')
-
-    with col1:
-        restecg = st.text_input('Resting Electrocardiograph results')
-
-    with col2:
-        thalach = st.text_input('Maximum Heart Rate achieved')
-
-    with col3:
-        exang = st.text_input('Exercise Induced Angina')
-
-    with col1:
-        oldpeak = st.text_input('ST depression induced by exercise')
-
-    with col2:
-        slope = st.text_input('Slope of the peak exercise ST segment')
-
-    with col3:
-        ca = st.text_input('Major vessels colored by fluoroscopy')
-
-    with col1:
-        thal = st.text_input(
-            'thal: 0 = normal; 1 = fixed defect; 2 = reversible defect')
-
-    # code for Prediction
-    heart_diagnosis = ''
-
-    # creating a button for Prediction
-
-    if st.button('Heart Disease Test Result'):
-        heart_prediction = heart_disease_model.predict(
-            [[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]])
-
-        if heart_prediction[0] == 1:
-            heart_diagnosis = 'The person is having heart disease'
-        else:
-            heart_diagnosis = 'The person does not have any heart disease'
-
-    st.success(heart_diagnosis)
+    st.success(diab_diagnosis)  # Displaying the diagnosis result
 
 
 # Parkinson's Prediction Page
@@ -154,6 +83,8 @@ if selected == "Parkinson's Prediction":
 
     # page title
     st.title("👨‍🦳Parkinson's Disease Prediction using ML")
+
+# Input fields for features related to Parkinson's disease prediction...
 
     col1, col2, col3, col4, col5 = st.columns(5)
 
@@ -226,15 +157,16 @@ if selected == "Parkinson's Prediction":
     # code for Prediction
     parkinson_diagnosis = ''
 
-    # creating a button for Prediction
+    # Button to trigger the Parkinson's disease prediction
     if st.button("Parkinson's Test Result"):
         parkinson_prediction = parkinson_model.predict(
             [[fo, fhi, flo, Jitter_percent, Jitter_Abs, RAP, PPQ, DDP, Shimmer, Shimmer_dB, APQ3, APQ5, APQ, DDA, NHR,
               HNR, RPDE, DFA, spread1, spread2, D2, PPE]])
 
+        # Determining the diagnosis based on the prediction result
         if parkinson_prediction[0] == 1:
             parkinson_diagnosis = "The person has Parkinson's disease"
         else:
             parkinson_diagnosis = "The person does not have Parkinson's disease"
 
-    st.success(parkinson_diagnosis)
+    st.success(parkinson_diagnosis)  # Displaying the diagnosis result
